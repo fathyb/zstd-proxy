@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "lib": ["es2022"],
+        "strict": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "declarationMap": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "node",
+        "composite": true,
+        "incremental": true,
+        "skipLibCheck": true,
+        "preserveWatchOutput": true,
+        "rootDir": "src",
+        "outDir": "build",
+        "tsBuildInfoFile": "build/tsconfig.tsbuildinfo",
+        "module": "commonjs",
+        "types": ["node"]
+    },
+    "include": ["src/**/*.ts"]
+}

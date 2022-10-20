@@ -1,0 +1,8 @@
+{
+  "name": "Linux",
+  "build": { "dockerfile": "Dockerfile" },
+  "extensions": ["ms-vscode.cpptools-extension-pack"],
+  "runArgs": ["--ulimit", "memlock=-1:-1"],
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=remote-workspace,target=/workspace,type=volume"
+}

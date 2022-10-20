@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "node_modules/nan",
+        "/usr/include/node",
+        "/usr/local/include/node"
+      ]
+    },
+    {
+      "name": "macOS",
+      "includePath": [
+        "node_modules/nan",
+        "/usr/local/include/node",
+        "/opt/homebrew/include"
+      ]
+    }
+  ]
+}
