@@ -1,6 +1,6 @@
 {
   "name": "zstd-proxy",
-  "version": "1.0.1-next.1",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "build/index.js",
   "types": "build/index.d.ts",

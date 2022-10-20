@@ -40,7 +40,6 @@ int zstd_proxy_posix_process(zstd_proxy_connection* connection, ZSTD_inBuffer *i
 int zstd_proxy_posix_run(zstd_proxy_connection* connection) {
     int error = 0;
     int recv_fd = connection->listen->fd;
-    int send_fd = connection->connect->fd;
     size_t size = connection->options->buffer_size;
     ZSTD_inBuffer input = { .src = malloc(size) };
     ZSTD_outBuffer output = { .dst = malloc(size), .size = size };
@@ -52,7 +51,7 @@ int zstd_proxy_posix_run(zstd_proxy_connection* connection) {
     }
 
     if (connection->listen->data_length > 0) {
-        char* buffer = input.src;
+        const void *buffer = input.src;
 
         input.pos = 0;
         input.src = connection->listen->data;
