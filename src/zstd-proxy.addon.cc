@@ -8,6 +8,7 @@
 
 extern "C" {
     #include "zstd-proxy.h"
+    #include "zstd-proxy-utils.h"
 }
 
 namespace zstdProxy {
@@ -32,7 +33,7 @@ namespace zstdProxy {
         void *array[64];
         size_t size = backtrace(array, 64);
 
-        fprintf(stderr, "Error: Signal %d; %lu frames found:\n", sig, size);
+        log_error("Fatal error: Signal %d; %lu frames found:", sig, size);
         backtrace_symbols_fd(array, size, STDERR_FILENO);
         exit(128 + sig);
     }
@@ -47,13 +48,13 @@ namespace zstdProxy {
         return nullptr;
     }
 
-    inline Local<Value> GetOption(Local<Context> context, Local<Object> options, const char *name) {
+    static inline Local<Value> GetOption(Local<Context> context, Local<Object> options, const char *name) {
         return options->
             Get(context, v8::String::NewFromUtf8(context->GetIsolate(), name).ToLocalChecked()).
             ToLocalChecked();
     }
 
-    inline bool GetBoolOption(Local<Context> context, Local<Object> options, const char *name, bool defaultValue) {
+    static inline bool GetBoolOption(Local<Context> context, Local<Object> options, const char *name, bool defaultValue) {
         auto option = GetOption(context, options, name);
 
         if (option->IsUndefined()) {
@@ -63,7 +64,7 @@ namespace zstdProxy {
         }
     }
 
-    inline unsigned GetUnsignedOption(Local<Context> context, Local<Object> options, const char *name, unsigned defaultValue) {
+    static inline unsigned GetUnsignedOption(Local<Context> context, Local<Object> options, const char *name, unsigned defaultValue) {
         auto option = GetOption(context, options, name);
 
         if (option->IsUndefined()) {
@@ -73,15 +74,19 @@ namespace zstdProxy {
         }
     }
 
+#if DEBUG
     bool registered = false;
+#endif
 
     void Proxy(const FunctionCallbackInfo<Value> &args) {
+#if DEBUG
         if (!registered) {
             registered = true;
 
             signal(SIGSEGV, HandleAbortSignal);
             signal(SIGABRT, HandleAbortSignal);
         }
+#endif
 
         Isolate *isolate = args.GetIsolate();
         Local<Context> context = isolate->GetCurrentContext();
@@ -112,8 +117,6 @@ namespace zstdProxy {
 
             data->proxy.options.zstd.enabled = zstd;
             data->proxy.options.io_uring.enabled = io_uring;
-
-            printf("Options: uring=%d, zstd=%d\n", io_uring, zstd);
 
             if (zstd) {
                 auto level = GetUnsignedOption(context, options, "zstd_level", 1);

@@ -125,7 +125,7 @@ void zstd_proxy_uring_options(zstd_proxy_options *options) {
     }
 }
 
-inline void zstd_proxy_uring_destroy(zstd_proxy_uring_queue *queue) {
+static inline void zstd_proxy_uring_destroy(zstd_proxy_uring_queue *queue) {
     if (queue == NULL) {
         return;
     }
@@ -209,7 +209,7 @@ int zstd_proxy_uring_create(zstd_proxy_uring_queue **queue_ptr, zstd_proxy_conne
     return error;
 }
 
-inline zstd_proxy_uring_buffer *zstd_proxy_uring_get(zstd_proxy_uring_queue *queue, zstd_proxy_uring_buffer_type type) {
+static inline zstd_proxy_uring_buffer *zstd_proxy_uring_get(zstd_proxy_uring_queue *queue, zstd_proxy_uring_buffer_type type) {
     // Find the oldest waiting buffer
     zstd_proxy_uring_buffer *next = NULL;
 
@@ -333,7 +333,7 @@ int zstd_proxy_uring_submit_send(zstd_proxy_uring_queue *queue) {
     return 0;
 }
 
-inline int zstd_proxy_uring_process(zstd_proxy_uring_buffer *recv_buffer) {
+static inline int zstd_proxy_uring_process(zstd_proxy_uring_buffer *recv_buffer) {
     int error = 0;
     zstd_proxy_uring_queue *queue = recv_buffer->queue;
     ZSTD_inBuffer input = {
@@ -395,7 +395,7 @@ inline int zstd_proxy_uring_process(zstd_proxy_uring_buffer *recv_buffer) {
     return 0;
 }
 
-inline int zstd_proxy_uring_complete(zstd_proxy_uring_buffer *buffer) {
+static inline int zstd_proxy_uring_complete(zstd_proxy_uring_buffer *buffer) {
     int res = buffer->result;
     zstd_proxy_uring_queue *queue = buffer->queue;
 

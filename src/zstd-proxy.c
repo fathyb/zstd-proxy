@@ -39,7 +39,7 @@ typedef struct {
     int decompress_error;
 } zstd_proxy_thread;
 
-inline int zstd_proxy_remove_nonblock(int fd) {
+static inline int zstd_proxy_remove_nonblock(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
 
     if (flags == -1) {
@@ -61,7 +61,7 @@ inline int zstd_proxy_remove_nonblock(int fd) {
     return 0;
 }
 
-inline int zstd_proxy_prepare(int listen_fd, int connect_fd) {
+static inline int zstd_proxy_prepare(int listen_fd, int connect_fd) {
     int error = zstd_proxy_remove_nonblock(listen_fd);
 
     if (error != 0) {
@@ -77,14 +77,14 @@ inline int zstd_proxy_prepare(int listen_fd, int connect_fd) {
     return 0;
 }
 
-inline bool zstd_proxy_is_socket(int fd) {
+static inline bool zstd_proxy_is_socket(int fd) {
     int type;
     socklen_t length = sizeof(type);
 
     return getsockopt(fd, SOL_SOCKET, SO_TYPE, &type, &length) == 0;
 }
 
-inline int zstd_proxy_platform_run(zstd_proxy_connection* connection) {
+static inline int zstd_proxy_platform_run(zstd_proxy_connection* connection) {
 #if ENABLE_URING
     if (connection->options->io_uring.enabled) {
         return zstd_proxy_uring_run(connection);
