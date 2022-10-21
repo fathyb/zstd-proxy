@@ -14,4 +14,3 @@ RUN git clone https://github.com/axboe/liburing.git /liburing && \
     ./configure && \
     make -j4 && \
     make -j4 install
-
