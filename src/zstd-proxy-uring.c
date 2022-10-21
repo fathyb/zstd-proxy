@@ -487,7 +487,6 @@ int zstd_proxy_uring_run(zstd_proxy_connection *connection) {
         goto cleanup;
     }
 
-    bool read = true;
     struct io_uring *uring = &queue->uring;
     struct io_uring_cqe *cqe = NULL;
 
@@ -530,12 +529,10 @@ int zstd_proxy_uring_run(zstd_proxy_connection *connection) {
             goto cleanup;
         }
 
-        if (read) {
-            error = zstd_proxy_uring_submit_recv(queue);
+        error = zstd_proxy_uring_submit_recv(queue);
 
-            if (error != 0) {
-                goto cleanup;
-            }
+        if (error != 0) {
+            goto cleanup;
         }
 
         // Get the oldest pending recv buffer
@@ -546,9 +543,9 @@ int zstd_proxy_uring_run(zstd_proxy_connection *connection) {
             continue;
         }
 
-        // Connection got closed, send remaining data and don't recv()
+        // Connection got closed
         if (recv_buffer->size == 0) {
-            read = false;
+            break;
         }
 
         debug_assert(!recv_buffer->running);
@@ -561,16 +558,14 @@ int zstd_proxy_uring_run(zstd_proxy_connection *connection) {
         }
 
         // Enqueue another recv() if possible
-        if (read) {
-            error = zstd_proxy_uring_submit_recv(queue);
+        error = zstd_proxy_uring_submit_recv(queue);
 
-            if (error != 0) {
-                goto cleanup;
-            }
+        if (error != 0) {
+            goto cleanup;
         }
     }
 
-    log_debug("stopping, running=%lu", queue->running);
+    log_debug("stopping, queue items running=%lu", queue->running);
     
     cleanup:
 
