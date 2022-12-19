@@ -2,7 +2,7 @@
 
 High-performance TCP/UNIX proxy with Zstd compression, with Node.js bindings.
 
-This is built for the block storage infrastructre in Refloat CI, optimized for a low count (< 100) of medium-lived connections (~ 3 minutes) with high-throughput (~ 500Mbps) and low-latency requirements (< 1ms). It uses io_uring on Linux with fixed buffers to transmit without any syscall.
+Optimized for a low count (< 100) of medium-lived connections (~ 3 minutes) with high-throughput (~ 500Mbps) and low-latency requirements (< 1ms). It uses io_uring on Linux with fixed buffers to transmit without any syscall.
 
 An optional zero-copy send mode can be enabled, but it requires Linux 6 and seems to crash on ARM.
 
